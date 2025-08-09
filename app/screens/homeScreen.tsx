@@ -17,7 +17,7 @@ export default function HomeScreen() {
           return (
             <View className="flex-1 items-center justify-center p-12" style={ps('bg-1')}>
               <Text style={ps('text-2xl fw-700 f-1 text-strong')}>Welcome to the Home Screen!</Text>
-              <Text className="mt-4" style={ps('text-md f-1 text-normal')}>This is where you can manage your account settings.</Text>
+              <Text className="mt-4" style={ps('text-md f-1 text-normal')}>This is where you manage your account settings.</Text>
               <Text className="mt-4" style={ps('text-md f-1 text-normal')}>Email: {email}</Text>
               <View>
                 <Pressable onPress={() => signOut()} className="m-4 rounded-lg p-4 items-center" style={ps('bg-2 shadow-2')}>
