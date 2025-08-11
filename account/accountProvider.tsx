@@ -321,7 +321,7 @@ export const allThemes = {
 
 type Ct = typeof allThemes.theme1
 type Ctn = 'theme1' | 'theme2' | 'theme3' | 'theme4'
-type SubscriptionType = 'free' | 'basic' | 'pro'
+type SubscriptionType = 'free' | 'basic_monthly' | 'basic_yearly' | 'pro_monthly' | 'pro_yearly'
 
 interface Account {
   userId?: string | null
