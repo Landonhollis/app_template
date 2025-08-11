@@ -1,7 +1,14 @@
 // api/platformSubscriptionNotificationEndpoint.js
 // Simple webhook logger to see what Stripe is sending
 
-export default async function handler(req: any, res: any) {
+const express = require('express');
+
+// Initialize Express app
+const app = express();
+app.use(express.json()); // Parse incoming JSON
+
+// This replaces `export default async function handler`
+app.post('/platformSubscriptionNotificationsEndpoint', async (req: any, res: any) => {
   console.log('========================================');
   console.log('🔔 WEBHOOK RECEIVED!');
   console.log('========================================');
@@ -66,4 +73,4 @@ export default async function handler(req: any, res: any) {
     message: 'Webhook logged successfully',
     eventType: req.body?.type || 'unknown'
   });
-}
+});

@@ -15,7 +15,7 @@ const supabase = createClient(
 );
 
 // Main endpoint handler
-app.post('/changePlatformSubscription', async (req: any, res: any) => {
+app.post('/apiPlatformSubscription', async (req: any, res: any) => {
   try {
     const { newSubscription, userId } = req.body;
     

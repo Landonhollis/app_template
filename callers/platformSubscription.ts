@@ -5,7 +5,7 @@ export const changeSubscription = async (
   userId: string
 ) => {
   try {
-    const response = await fetch('/api/changePlatformSubscription', {
+    const response = await fetch('https://app-template-nu.vercel.app/api/apiPlatformSubscription', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
