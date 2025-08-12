@@ -104,7 +104,7 @@ app.post('/apiPlatformSubscription', async (req: any, res: any) => {
           
         res.json({ 
           success: true, 
-          subscription: canceledSubscription,
+          changedSubscription: true,
           message: 'Subscription set to cancel at period end'
         });
         return;
@@ -153,7 +153,8 @@ app.post('/apiPlatformSubscription', async (req: any, res: any) => {
       
       res.json({ 
         success: true, 
-        changedSubscription: updatedSubscription 
+        changedSubscription: true,
+        message: 'Subscription updated successfully'
       });
         
     } else {
