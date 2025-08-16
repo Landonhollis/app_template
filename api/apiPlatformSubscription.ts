@@ -241,7 +241,20 @@ export default async function handler(req: any, res: any) {
         // The user can still complete payment, but we should log this issue
       }
       
-      const paymentIntent = subscription.latest_invoice.payment_intent;
+      // Safely access the payment intent
+      const latestInvoice = subscription.latest_invoice;
+      if (!latestInvoice) {
+        throw new Error('No latest invoice found on subscription');
+      }
+      
+      const paymentIntent = latestInvoice.payment_intent;
+      if (!paymentIntent) {
+        throw new Error('No payment intent found on latest invoice');
+      }
+      
+      if (!paymentIntent.client_secret) {
+        throw new Error('No client secret found on payment intent');
+      }
       
       res.json({
         clientSecret: paymentIntent.client_secret,
