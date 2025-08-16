@@ -1,12 +1,7 @@
 // Required imports and setup
-const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { getUserFromDatabase } = require('./fetchSupaBase');
-
-// Initialize Express app (if not already initialized elsewhere)
-const app = express();
-app.use(express.json()); // Middleware to parse JSON bodies
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -14,8 +9,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY // Bypasses RLS
 );
 
-// Main endpoint handler
-app.post('/apiPlatformSubscription', async (req: any, res: any) => {
+// Main endpoint handler for Vercel
+export default async function handler(req: any, res: any) {
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
   try {
     const { newSubscription, userId } = req.body;
     
@@ -236,7 +235,7 @@ app.post('/apiPlatformSubscription', async (req: any, res: any) => {
       details: error instanceof Error ? error.message : 'Unknown error'
     });
   }
-});
+}
 
 // Helper function to map plan names to Stripe price IDs
 function getPriceIdFromPlan(plan: string): string | undefined {
@@ -249,12 +248,3 @@ function getPriceIdFromPlan(plan: string): string | undefined {
   
   return priceMap[plan.toLowerCase()];
 }
-
-// Export app if this is a module
-module.exports = app;
-
-// Or start server if this is the main file
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// });

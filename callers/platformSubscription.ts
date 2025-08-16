@@ -14,6 +14,20 @@ export const changeSubscription = async (
       })
     });
     
+    // Check if response is ok and content-type is JSON
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API Response Error:', response.status, errorText);
+      throw new Error(`API Error: ${response.status} - ${errorText}`);
+    }
+    
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const responseText = await response.text();
+      console.error('Non-JSON Response:', responseText);
+      throw new Error(`Expected JSON response, got: ${contentType}. Response: ${responseText}`);
+    }
+    
     const data = await response.json();
     
     // For existing customer upgrading or free plan
