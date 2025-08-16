@@ -1,14 +1,12 @@
-// api/platformSubscriptionNotificationEndpoint.js
+// api/platformSubscriptionNotificationEndpoint.ts
 // Simple webhook logger to see what Stripe is sending
 
-const express = require('express');
-
-// Initialize Express app
-const app = express();
-app.use(express.json()); // Parse incoming JSON
-
-// This replaces `export default async function handler`
-app.post('/platformSubscriptionNotificationsEndpoint', async (req: any, res: any) => {
+// Vercel serverless function handler
+export default async function handler(req: any, res: any) {
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
   console.log('========================================');
   console.log('🔔 WEBHOOK RECEIVED!');
   console.log('========================================');
@@ -73,4 +71,4 @@ app.post('/platformSubscriptionNotificationsEndpoint', async (req: any, res: any
     message: 'Webhook logged successfully',
     eventType: req.body?.type || 'unknown'
   });
-});
+}
