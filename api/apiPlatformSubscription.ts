@@ -1,13 +1,36 @@
 // Required imports and setup
 const { createClient } = require('@supabase/supabase-js');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { getUserFromDatabase } = require('./fetchSupaBase');
 
 // Initialize Supabase client
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY // Bypasses RLS
 );
+
+// Helper function to get user from database
+async function getUserFromDatabase(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from('accounts') // Using 'accounts' table based on your code
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      throw new Error(`Database error: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error('User not found');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error getting user:', error);
+    throw error;
+  }
+}
 
 // Main endpoint handler for Vercel
 export default async function handler(req: any, res: any) {
