@@ -224,7 +224,12 @@ export default async function handler(req: any, res: any) {
         items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
         payment_settings: { 
-          save_default_payment_method: 'on_subscription' 
+          save_default_payment_method: 'on_subscription',
+          payment_method_options: {
+            card: {
+              request_three_d_secure: 'if_required'
+            }
+          }
         },
         expand: ['latest_invoice.payment_intent']
       });
@@ -251,6 +256,12 @@ export default async function handler(req: any, res: any) {
       if (!paymentIntent) {
         throw new Error('No payment intent found on latest invoice');
       }
+      
+      // Update the payment intent to use manual confirmation (forces payment sheet)
+      await stripe.paymentIntents.update(paymentIntent.id, {
+        confirmation_method: 'manual' // This forces payment sheet
+        // Don't include payment_method here
+      });
       
       if (!paymentIntent.client_secret) {
         throw new Error('No client secret found on payment intent');
