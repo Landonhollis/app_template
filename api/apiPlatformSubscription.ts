@@ -231,7 +231,13 @@ export default async function handler(req: any, res: any) {
             }
           }
         },
-        expand: ['latest_invoice.payment_intent']
+        expand: ['latest_invoice.payment_intent'],
+        // Configure payment intent creation with manual confirmation
+        automatic_tax: { enabled: false },
+        payment_intent_data: {
+          confirmation_method: 'manual', // This forces payment sheet
+          // Don't include payment_method here to force user selection
+        }
       });
       
       // Save the platformSubscriptionId to supabase
@@ -256,12 +262,6 @@ export default async function handler(req: any, res: any) {
       if (!paymentIntent) {
         throw new Error('No payment intent found on latest invoice');
       }
-      
-      // Update the payment intent to use manual confirmation (forces payment sheet)
-      await stripe.paymentIntents.update(paymentIntent.id, {
-        confirmation_method: 'manual' // This forces payment sheet
-        // Don't include payment_method here
-      });
       
       if (!paymentIntent.client_secret) {
         throw new Error('No client secret found on payment intent');
